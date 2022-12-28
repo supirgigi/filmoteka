@@ -81,5 +81,5 @@ async function createAccount(e) {
 
 function logout(e) {
   e.preventDefault();
-  signOut(auth);
+  signOut(auth).then(location.reload());
 }
