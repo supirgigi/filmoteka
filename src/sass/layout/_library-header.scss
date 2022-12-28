@@ -1,0 +1,139 @@
+.library-header {
+  background-image: linear-gradient(
+      to right,
+      var(--overlay-bg-color),
+      var(--overlay-bg-color)
+    ),
+    url(../images/library/library_mobile.jpg);
+  padding-bottom: 60px;
+}
+
+.library-btns {
+  display: flex;
+  margin: 0 auto;
+  gap: 20px;
+  width: 260px;
+}
+
+.library-btns__item {
+  flex-basis: calc((100% - 20px) / 2);
+}
+
+.library-btns__btn {
+  width: 100%;
+  @include centeredFlex;
+
+  border: 1px solid var(--main-bg-color);
+  border-radius: 5px;
+  padding: 12px;
+
+  background-color: transparent;
+  color: var(--light-text-color);
+
+  @include font(12px, 16px);
+  font-weight: 500;
+  text-transform: uppercase;
+
+  transition: border-color var(--timing-function),
+    background-color var(--timing-function), box-shadow var(--timing-function);
+
+  &:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0px 8px 43px rgba(255, 107, 1, 0.6);
+  }
+
+  &_current {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0px 8px 43px rgba(255, 107, 1, 0.6);
+  }
+}
+
+@media screen and (min-device-pixel-ratio: 2) and (max-width: 767px),
+  screen and (min-resolution: 192dpi) and (max-width: 767px),
+  screen and (min-resolution: 2dppx) and (max-width: 767px) {
+  .library-header {
+    background-image: linear-gradient(
+        to right,
+        var(--overlay-bg-color),
+        var(--overlay-bg-color)
+      ),
+      url(../images/library/library_mobile@2x.jpg);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .library-header {
+    background-image: linear-gradient(
+        to right,
+        var(--overlay-bg-color),
+        var(--overlay-bg-color)
+      ),
+      url(../images/library/library_tablet.jpg);
+  }
+
+  .library-btns {
+    gap: 32px;
+    width: 336px;
+  }
+
+  .library-btns__item {
+    flex-basis: calc((100% - 32px) / 2);
+  }
+}
+
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 768px),
+  screen and (min-resolution: 192dpi) and (min-width: 768px),
+  screen and (min-resolution: 2dppx) and (min-width: 768px) {
+  .library-header {
+    background-image: linear-gradient(
+        to right,
+        var(--overlay-bg-color),
+        var(--overlay-bg-color)
+      ),
+      url(../images/library/library_tablet@2x.jpg);
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .library-header {
+    background-image: linear-gradient(
+        to right,
+        var(--overlay-bg-color),
+        var(--overlay-bg-color)
+      ),
+      url(../images/library/library_desktop.jpg);
+  }
+
+  .library-btns {
+    gap: 16px;
+    width: 310px;
+  }
+
+  .library-btns__item {
+    flex-basis: calc((100% - 16px) / 2);
+  }
+}
+
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 1280px),
+  screen and (min-resolution: 192dpi) and (min-width: 1280px),
+  screen and (min-resolution: 2dppx) and (min-width: 1280px) {
+  .library-header {
+    background-image: linear-gradient(
+        to right,
+        var(--overlay-bg-color),
+        var(--overlay-bg-color)
+      ),
+      url(../images/library/library_desktop@2x.jpg);
+  }
+}
+
+// <ul class="library-btns">
+//       <li class="library-btns__item">
+//         <button class="library-btns__btn"></button>
+//       </li>
+//       <li class="library-btns__item">
+//         <button class="library-btns__btn"></button>
+//       </li>
+//     </ul>

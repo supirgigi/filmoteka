@@ -1,0 +1,18 @@
+@import './utils/mixins';
+@import './utils/variables';
+
+@import './base/common';
+@import './base/container';
+@import './base/section';
+
+@import './layout/header';
+@import './layout/footer';
+@import './components/card-list';
+@import './components/preloader';
+
+@import './components/backdrop';
+@import './components/movie-modal';
+@import './components/pagination';
+@import './components/auth-form';
+
+@import './utils/visually-hidden';

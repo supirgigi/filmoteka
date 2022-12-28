@@ -1,0 +1,37 @@
+<div class="auth-modal backdrop is-hidden">
+  <div class="auth-modal-container">
+    <button class="auth-modal__close-btn" data-auth-close>
+      <svg width="30px" height="30px">
+        <use href="./images/icons.svg#icon-close"></use>
+      </svg>
+    </button>
+    <form class="auth-form" autocomplete="off">
+      <label class="auth-form__label">
+        Email
+        <input type="email" class="auth-form__input" name="email" required />
+      </label>
+      <label class="auth-form__label">
+        Password
+        <input
+          type="password"
+          class="auth-form__input"
+          name="password"
+          required
+        />
+      </label>
+
+      <div class="auth-form-buttons">
+        <button type="submit" class="auth-form-button" data-auth-login>
+          Log In
+        </button>
+        <button
+          type="button"
+          class="auth-form-button auth-register"
+          data-auth-register
+        >
+          Register
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

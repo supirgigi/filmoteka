@@ -1,0 +1,254 @@
+.modal-card {
+  transform: translateX(-50%);
+  position: relative;
+  left: 50%;
+  width: 280px;
+  padding: 48px 20px 40px;
+
+  background-color: var(--main-bg-color);
+}
+
+.modal-card__img {
+  width: 240px;
+  height: 357px;
+  border-radius: 5px;
+  object-fit: contain;
+}
+
+.modal-card-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 0;
+  @include centeredFlex;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color var(--timing-function);
+  color: var(--dark-bg-color);
+
+  &:hover,
+  &:focus {
+    color: var(--accent-color);
+  }
+}
+
+.modal-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-card-close__icon {
+  stroke: currentColor;
+}
+
+.modal-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-card-info__title {
+  @include font(20px, 23px);
+  font-weight: 500;
+}
+
+.modal-card-table {
+  border-collapse: collapse;
+  & tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+// .modal-card-table__row {
+//   display: flex;
+// }
+
+.modal-card-table__header {
+  width: 70px;
+  @include font(12px, 16px);
+  font-weight: 500;
+  color: var(--movie-modal-text-color);
+}
+
+.modal-card-table__descr {
+  padding-left: 40px;
+  @include font(12px, 16px);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.modal-card-votes {
+  padding: 1px 9px;
+  margin-right: 3px;
+  border-radius: 5px;
+  background-color: var(--accent-color);
+  color: var(--light-text-color);
+}
+
+.modal-card-slash {
+  @include font(12px, 16px);
+  font-weight: 500;
+  color: var(--movie-modal-text-color);
+}
+
+.modal-card-about__title {
+  margin-bottom: 8px;
+  @include font(12px, 16px);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.modal-card-about__text {
+  @include font(12px, 20px);
+  font-weight: 500;
+}
+
+.modal-card-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.watched-btn,
+.queue-btn {
+  width: 110px;
+  height: 44px;
+  padding: 5px;
+  border-radius: 5px;
+  @include centeredFlex;
+  @include font(12px, 16px);
+  font-weight: 500;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: 1px solid var(--dark-bg-color);
+  transition: color var(--timing-function),
+    background-color var(--timing-function), border-color var(--timing-function);
+  outline: none;
+
+  &:hover,
+  &:focus {
+    color: var(--light-text-color);
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .modal-card {
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    width: 704px;
+    padding: 40px 72px 40px 36px;
+  }
+
+  .modal-card__img {
+    width: 264px;
+    height: 373px;
+  }
+
+  .modal-card-content {
+    flex-direction: row;
+    gap: 68px;
+  }
+
+  .modal-card-info {
+    width: 264px;
+  }
+
+  .modal-card-buttons {
+    gap: 14px;
+  }
+
+  .watched-btn,
+  .queue-btn {
+    width: 125px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .modal-card {
+    width: 806px;
+    padding: 40px 12px;
+
+    background-color: var(--main-bg-color);
+  }
+
+  .modal-card__img {
+    width: 375px;
+    height: 478px;
+  }
+
+  .modal-card-content {
+    gap: 16px;
+  }
+
+  .modal-card-info {
+    width: 391px;
+  }
+
+  .modal-card-info__title {
+    @include font(30px, 35px);
+  }
+
+  .modal-card-buttons {
+    width: 287px;
+    margin-left: 8px;
+    gap: 15px;
+  }
+
+  .watched-btn,
+  .queue-btn {
+    width: 136px;
+  }
+}
+
+// <div class="modal-card" data-id="${id}">
+//         <button type="button" class="modal-card__close">
+//             <svg width="30px" height="30px">
+//                 <use href="./images/symbol-defs.svg#icon-close"></use>
+//             </svg>
+//         </button>
+//           <img src="https://image.tmdb.org/t/p/w300/${poster_path}" alt="${original_title} poster" class="modal-card__img" />
+//           <div class="modal-card-info">
+//             <h3 class="modal-card-info__title">${original_title}</h3>
+//             <table class="modal-card-table">
+//        <tbody>
+//         <tr class="modal-card-table__row">
+//             <td class="modal-card-table__header">Vote / Votes</td>
+//             <td class="modal-card-table__descr">${vote_average} / ${vote_count}</td>
+//         </tr>
+//         <tr class="modal-card-table__row">
+//             <td class="modal-card-table__header">Popularity</td>
+//             <td class="modal-card-table__descr">${popularity}</td>
+//         </tr>
+//         <tr class="modal-card-table__row">
+//             <td class="modal-card-table__header">Original Title</td>
+//             <td class="modal-card-table__descr">${original_title}</td>
+//         </tr>
+//         <tr class="modal-card-table__row">
+//             <td class="modal-card-table__header">Genre</td>
+//             <td class="modal-card-table__descr">${genres}</td>
+//         </tr>
+//        </tbody>
+//             </table>
+//             <div class="modal-card-about">
+//                 <p class="modal-card-about__title">About</p>
+//                 <p class="modal-card-about__title">${overview}</p>
+//             </div>
+//             <ul class="modal-card-buttons">
+//                 <li class="modal-card-buttons__item">
+//                     <button class="modal-card-buttons__btn">add to Watched</button>
+//                 </li>
+//                 <li class="modal-card-buttons__item">
+//                     <button class="modal-card-buttons__btn">add to queue</button>
+//                 </li>
+//             </ul>
+//           </div>
+//         </div>
+//       `;

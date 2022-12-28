@@ -1,0 +1,16 @@
+.watched-btn,
+.queue-btn {
+  width: 170px;
+  color: var(--light-text-color);
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  .watched-btn,
+  .queue-btn {
+    margin: 0;
+  }
+}

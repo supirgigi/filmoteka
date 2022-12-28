@@ -1,0 +1,55 @@
+footer {
+  padding: 29px 0;
+  background-color: var(--footer-bg-color);
+}
+
+.footer-credits {
+  width: 236px;
+  margin: 0 auto;
+  @include centeredFlex;
+  flex-wrap: wrap;
+  gap: 10px;
+  @include font(14px, 16px);
+  color: var(--footer-text-color);
+}
+
+.developers {
+  display: flex;
+  align-items: center;
+}
+
+.developers__icon {
+  margin: 0 10px;
+  fill: var(--accent-color);
+}
+
+.developers__link {
+  text-decoration: underline;
+}
+
+@media screen and (min-width: 768px) {
+  .footer-credits {
+    width: 482px;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+}
+
+// .footer-credits__developers {
+//   display: flex;
+//   gap: 8px;
+// }
+// <footer>
+//   <div class="container">
+//     <div class="footer-credits">
+//       <p class="footer-credits__rights">© 2020 | All Rights Reserved |</p>
+//       <p class="developers">
+//         Developed with
+//         <svg class="developers__icon" width="14px" height="13px">
+//           <use href="./images/icons.svg#icon-heart"></use>
+//         </svg>
+//         by <a class="developers__link" href="">GoIT Students</a>
+//       </p>
+//     </div>
+//   </div>
+// </footer>
