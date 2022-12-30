@@ -77,10 +77,10 @@ export function selectedMovieTemplate({
               </div>
               <ul class="modal-card-buttons">
                   <li class="modal-card-buttons__item">
-                      <button class="watched-btn" data-watched-add>add to Watched</button>
+                      <button class="modal-card-buttons__btn" data-watched-add>add to watched</button>
                   </li>
                   <li class="modal-card-buttons__item">
-                      <button class="queue-btn" data-queue-add>add to queue</button>
+                      <button class="modal-card-buttons__btn" data-queue-add>add to queue</button>
                   </li>
               </ul>
             </div>
@@ -126,7 +126,7 @@ export function selectedWatchedTemplate({
                     <p class="modal-card-about__title">About</p>
                     <p class="modal-card-about__text">${overview}</p>
                 </div>
-                <button class="watched-btn" data-watched-remove>Remove from watched</button>
+                <button class="modal-card-buttons__btn" data-watched-remove>Remove from watched</button>
               </div>
           `;
 }
@@ -170,7 +170,7 @@ export function selectedQueueTemplate({
                       <p class="modal-card-about__title">About</p>
                       <p class="modal-card-about__text">${overview}</p>
                   </div>
-                  <button class="queue-btn" data-queue-remove>Remove from queue</button>
+                  <button class="modal-card-buttons__btn" data-queue-remove>Remove from queue</button>
                 </div>
             `;
 }

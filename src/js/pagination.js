@@ -135,83 +135,83 @@ function handlePagination() {
 async function renderCards() {
   spinner.show();
   if (paginationSettings.paginationType === 'trending') {
-    movieApi.getTrending().then(data => {
-      const formattedResults = data.results.map(dataFormat);
-      const markup = formattedResults.map(cardTemplate).join('');
-      refs.movieList.innerHTML = markup;
+    try {
+      movieApi.getTrending().then(data => {
+        const formattedResults = data.results.map(dataFormat);
+        const markup = formattedResults.map(cardTemplate).join('');
+        refs.movieList.innerHTML = markup;
+      });
+    } catch (error) {
+      Notiflix.Notify.failure(error.message);
+    } finally {
       spinner.close();
-      // toTopScroll();
-    });
+    }
   }
 
   if (paginationSettings.paginationType === 'search') {
     spinner.show();
-    movieApi.searchMovies().then(({ results }) => {
-      const formattedResults = results.map(dataFormat);
-      const markup = formattedResults.map(cardTemplate).join('');
-      refs.movieList.innerHTML = markup;
+    try {
+      movieApi.searchMovies().then(({ results }) => {
+        const formattedResults = results.map(dataFormat);
+        const markup = formattedResults.map(cardTemplate).join('');
+        refs.movieList.innerHTML = markup;
+      });
+    } catch (error) {
+      Notiflix.Notify.failure(error.message);
+    } finally {
       spinner.close();
-    });
+    }
   }
 
   if (paginationSettings.paginationType === 'watched') {
     spinner.show();
-    const { watchedMovies } = await getDoc(
-      doc(db, 'users', auth.currentUser.uid)
-    ).then(res => {
-      return res.data();
-    });
-    const paginatedResults = watchedMovies.filter((result, index) => {
-      return (
-        index < movieApi.page * paginationSettings.perPage &&
-        index >=
-          movieApi.page * paginationSettings.perPage -
-            paginationSettings.perPage
-      );
-    });
-    console.log(paginatedResults);
-    const markup = paginatedResults.map(cardLibraryTemplate).join('');
-    refs.movieList.innerHTML = markup;
-    spinner.close();
+    try {
+      const { watchedMovies } = await getDoc(
+        doc(db, 'users', auth.currentUser.uid)
+      ).then(res => {
+        return res.data();
+      });
+      const paginatedResults = watchedMovies.filter((result, index) => {
+        return (
+          index < movieApi.page * paginationSettings.perPage &&
+          index >=
+            movieApi.page * paginationSettings.perPage -
+              paginationSettings.perPage
+        );
+      });
+      console.log(paginatedResults);
+      const markup = paginatedResults.map(cardLibraryTemplate).join('');
+      refs.movieList.innerHTML = markup;
+    } catch (error) {
+      Notiflix.Notify.failure(error.message);
+    } finally {
+      spinner.close();
+    }
   }
 
   if (paginationSettings.paginationType === 'queue') {
     spinner.show();
-    const { queuedMovies } = await getDoc(
-      doc(db, 'users', auth.currentUser.uid)
-    ).then(res => {
-      return res.data();
-    });
-    const paginatedResults = queuedMovies.filter((result, index) => {
-      return (
-        index < movieApi.page * paginationSettings.perPage &&
-        index >=
-          movieApi.page * paginationSettings.perPage -
-            paginationSettings.perPage
-      );
-    });
-    console.log(paginatedResults);
-    const markup = paginatedResults.map(cardLibraryTemplate).join('');
-    refs.movieList.innerHTML = markup;
-    spinner.close();
+    try {
+      const { queuedMovies } = await getDoc(
+        doc(db, 'users', auth.currentUser.uid)
+      ).then(res => {
+        return res.data();
+      });
+      const paginatedResults = queuedMovies.filter((result, index) => {
+        return (
+          index < movieApi.page * paginationSettings.perPage &&
+          index >=
+            movieApi.page * paginationSettings.perPage -
+              paginationSettings.perPage
+        );
+      });
+      console.log(paginatedResults);
+      const markup = paginatedResults.map(cardLibraryTemplate).join('');
+      refs.movieList.innerHTML = markup;
+    } catch (error) {
+      Notiflix.Notify.failure(error.message);
+    } finally {
+      spinner.close();
+    }
   }
-
-  // if (paginationSettings.paginationType === 'library') {
-  //   const ref = doc(db, 'users', `${userUid}`);
-  //   const { queuedMovies, watchedMovies } = await getDoc(ref).then(res => {
-  //     return res.data();
-  //   });
-  //   const storedMovies = [...watchedMovies, ...queuedMovies];
-  //   const paginatedResults = storedMovies.filter((result, index) => {
-  //     return (
-  //       index < movieApi.page * paginationSettings.perPage &&
-  //       index >=
-  //         movieApi.page * paginationSettings.perPage -
-  //           paginationSettings.perPage
-  //     );
-  //   });
-  //   console.log(paginatedResults);
-  //   const markup = paginatedResults.map(cardTemplate).join('');
-  //   refs.movieList.innerHTML = markup;
-  // }
 }

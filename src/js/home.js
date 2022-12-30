@@ -10,18 +10,22 @@ import { doc } from 'firebase/firestore';
 
 function onHomeLoad() {
   spinner.show();
-  movieApi.getTrending().then(data => {
-    console.log(data.results);
-    paginationSettings.maxPages = data.total_pages;
-    console.log(paginationSettings);
-    initializePagination();
-    const formattedResults = data.results.map(dataFormat);
-    const markup = formattedResults.map(cardTemplate).join('');
-    refs.movieList.innerHTML = markup;
-
+  try {
+    movieApi.getTrending().then(data => {
+      console.log(data.results);
+      paginationSettings.maxPages = data.total_pages;
+      console.log(paginationSettings);
+      initializePagination();
+      const formattedResults = data.results.map(dataFormat);
+      const markup = formattedResults.map(cardTemplate).join('');
+      refs.movieList.innerHTML = markup;
+      refs.pagination.classList.remove('visually-hidden');
+    });
+  } catch (error) {
+    Notiflix.Notify.failure(error.message);
+  } finally {
     spinner.close();
-  });
-  refs.pagination.classList.remove('visually-hidden');
+  }
 }
 
 onAuthStateChanged(auth, user => {

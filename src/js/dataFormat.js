@@ -2,7 +2,6 @@ import { genres } from './genres';
 import placeholderImg from '../images/no-image.png';
 
 const imageUrl = 'https://image.tmdb.org/t/p/w500/';
-// const placeholderImg = '../images/placeholder.jpg';
 
 export function dataFormat(item) {
   let formattedGenres = [];
@@ -57,12 +56,9 @@ export function dataFormat(item) {
   }
 
   if (!item.poster_path) {
-    // item.poster_path =
-    //   'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png';
     item.poster_path = placeholderImg;
   } else {
     item.poster_path = imageUrl + item.poster_path;
-    // https://image.tmdb.org/t/p/w500/
   }
 
   delete item.spoken_languages;

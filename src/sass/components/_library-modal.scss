@@ -1,5 +1,4 @@
-.watched-btn,
-.queue-btn {
+.modal-card-buttons__btn {
   width: 170px;
   color: var(--light-text-color);
   background-color: var(--accent-color);
@@ -9,8 +8,7 @@
 }
 
 @media screen and (min-width: 768px) {
-  .watched-btn,
-  .queue-btn {
+  .modal-card-buttons__btn {
     margin: 0;
   }
 }

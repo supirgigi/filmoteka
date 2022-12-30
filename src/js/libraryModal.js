@@ -23,42 +23,46 @@ function onLibraryClick(e) {
   }
   const card = e.target.closest('li');
   movieApi.id = card.dataset.id;
-  movieApi.getMovie().then(data => {
-    const formattedData = dataFormat(data);
-    currentMovie = formattedData;
-    let modalMarkup;
-    console.log(currentMovie);
+  try {
+    movieApi.getMovie().then(data => {
+      const formattedData = dataFormat(data);
+      currentMovie = formattedData;
+      let modalMarkup;
+      console.log(currentMovie);
 
-    if (paginationSettings.paginationType === 'watched') {
-      modalMarkup = selectedWatchedTemplate(formattedData);
-      refs.movieModal.innerHTML = modalMarkup;
-      onWatchedCard();
-    } else {
-      modalMarkup = selectedQueueTemplate(formattedData);
-      refs.movieModal.innerHTML = modalMarkup;
-      onQueueCard();
-    }
+      if (paginationSettings.paginationType === 'watched') {
+        modalMarkup = selectedWatchedTemplate(formattedData);
+        refs.movieModal.innerHTML = modalMarkup;
+        onWatchedCard();
+      } else {
+        modalMarkup = selectedQueueTemplate(formattedData);
+        refs.movieModal.innerHTML = modalMarkup;
+        onQueueCard();
+      }
 
-    refs.backdrop.classList.toggle('is-hidden');
-    refs.body.classList.toggle('locked');
+      refs.backdrop.classList.toggle('is-hidden');
+      refs.body.classList.toggle('locked');
 
-    refs.modalCloseBtn.addEventListener('click', toggleLibraryModal);
-    window.addEventListener('keydown', onEscPress);
-    refs.backdrop.addEventListener('click', onBackdropClick);
-  });
+      refs.modalCloseBtn.addEventListener('click', toggleLibraryModal);
+      window.addEventListener('keydown', onEscPress);
+      refs.backdrop.addEventListener('click', onBackdropClick);
+    });
+  } catch (error) {
+    Notiflix.Notify.failure(error.message);
+  }
 }
 
 function onWatchedCard() {
   watchedRemove = document.querySelector('[data-watched-remove]');
-  watchedRemove.addEventListener('click', removeFromWatched);
+  watchedRemove.addEventListener('click', removeFromWatchedLib);
 }
 
 function onQueueCard() {
   queueRemove = document.querySelector('[data-queue-remove]');
-  queueRemove.addEventListener('click', removeFromQueue);
+  queueRemove.addEventListener('click', removeFromQueueLib);
 }
 
-async function removeFromWatched() {
+async function removeFromWatchedLib() {
   const { userId, userEmail, watchedMovies, queuedMovies } = await getDoc(
     doc(db, 'users', auth.currentUser.uid)
   ).then(res => {
@@ -94,7 +98,7 @@ async function removeFromWatched() {
   Notiflix.Notify.success('Removed successfully');
 }
 
-async function removeFromQueue() {
+async function removeFromQueueLib() {
   const { userId, userEmail, watchedMovies, queuedMovies } = await getDoc(
     doc(db, 'users', auth.currentUser.uid)
   ).then(res => {

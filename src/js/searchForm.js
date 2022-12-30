@@ -14,7 +14,7 @@ function onFormSubmit(e) {
   const currentQuery = e.currentTarget.elements.search.value;
 
   if (currentQuery === '') {
-    document.querySelector('.error-msg').classList.remove('transparent');
+    Notiflix.Notify.failure('Please enter correct movie title');
     return;
   }
 
@@ -28,19 +28,24 @@ function onFormSubmit(e) {
   console.log(paginationSettings.paginationType);
   movieApi.resetPage();
 
-  movieApi.searchMovies().then(data => {
-    if (data.results.length === 0) {
-      Notiflix.Notify.failure('No matches');
-      spinner.close();
-      return;
-    }
-    console.log(data);
-    paginationSettings.maxPages = data.total_pages;
-    console.log(paginationSettings);
-    initializePagination();
-    const formattedResults = data.results.map(dataFormat);
-    const markup = formattedResults.map(cardTemplate).join('');
-    refs.movieList.innerHTML = markup;
+  try {
+    movieApi.searchMovies().then(data => {
+      if (data.results.length === 0) {
+        Notiflix.Notify.failure('No matches');
+        spinner.close();
+        return;
+      }
+      console.log(data);
+      paginationSettings.maxPages = data.total_pages;
+      console.log(paginationSettings);
+      initializePagination();
+      const formattedResults = data.results.map(dataFormat);
+      const markup = formattedResults.map(cardTemplate).join('');
+      refs.movieList.innerHTML = markup;
+    });
+  } catch (error) {
+    Notiflix.Notify.failure(error.message);
+  } finally {
     spinner.close();
-  });
+  }
 }
