@@ -8,7 +8,6 @@ import Notiflix from 'notiflix';
 import { spinner } from './preloader';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './auth';
-import emptyColPic from '../images/sad-dog.jpg';
 
 const watchedBtn = document.querySelector('[data-watched]');
 const queueBtn = document.querySelector('[data-queue]');
@@ -20,15 +19,11 @@ onAuthStateChanged(auth, user => {
     refs.authSignOut.parentElement.classList.remove('hidden');
     refs.authOpen.parentElement.classList.add('hidden');
     onWatchedClick();
-    // console.log(docRef);
   } else {
     console.log('user logged out');
     refs.authSignOut.parentElement.classList.add('hidden');
     refs.authOpen.parentElement.classList.remove('hidden');
     refs.pagination.classList.add('visually-hidden');
-    // refs.movieList.innerHTML = `<img src=${emptyColPic} style="margin: 0 auto;"></img>`;
-    // docRef = null;
-    // console.log(docRef);
   }
 });
 
