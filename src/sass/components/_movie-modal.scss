@@ -128,10 +128,11 @@
   transition: color 100ms linear, background-color 100ms linear,
     border-color 100ms linear;
 
-  &:hover {
-    background-color: var(--accent-color);
+  &:hover,
+  &:focus {
+    // background-color: var(--accent-color);
     border-color: var(--accent-color);
-    color: var(--light-text-color);
+    // color: var(--light-text-color);
   }
 
   &_current {
@@ -208,48 +209,3 @@
     width: 136px;
   }
 }
-
-// <div class="modal-card" data-id="${id}">
-//         <button type="button" class="modal-card__close">
-//             <svg width="30px" height="30px">
-//                 <use href="./images/symbol-defs.svg#icon-close"></use>
-//             </svg>
-//         </button>
-//           <img src="https://image.tmdb.org/t/p/w300/${poster_path}" alt="${original_title} poster" class="modal-card__img" />
-//           <div class="modal-card-info">
-//             <h3 class="modal-card-info__title">${original_title}</h3>
-//             <table class="modal-card-table">
-//        <tbody>
-//         <tr class="modal-card-table__row">
-//             <td class="modal-card-table__header">Vote / Votes</td>
-//             <td class="modal-card-table__descr">${vote_average} / ${vote_count}</td>
-//         </tr>
-//         <tr class="modal-card-table__row">
-//             <td class="modal-card-table__header">Popularity</td>
-//             <td class="modal-card-table__descr">${popularity}</td>
-//         </tr>
-//         <tr class="modal-card-table__row">
-//             <td class="modal-card-table__header">Original Title</td>
-//             <td class="modal-card-table__descr">${original_title}</td>
-//         </tr>
-//         <tr class="modal-card-table__row">
-//             <td class="modal-card-table__header">Genre</td>
-//             <td class="modal-card-table__descr">${genres}</td>
-//         </tr>
-//        </tbody>
-//             </table>
-//             <div class="modal-card-about">
-//                 <p class="modal-card-about__title">About</p>
-//                 <p class="modal-card-about__title">${overview}</p>
-//             </div>
-//             <ul class="modal-card-buttons">
-//                 <li class="modal-card-buttons__item">
-//                     <button class="modal-card-buttons__btn">add to Watched</button>
-//                 </li>
-//                 <li class="modal-card-buttons__item">
-//                     <button class="modal-card-buttons__btn">add to queue</button>
-//                 </li>
-//             </ul>
-//           </div>
-//         </div>
-//       `;

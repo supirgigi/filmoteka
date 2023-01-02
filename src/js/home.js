@@ -5,8 +5,7 @@ import { paginationSettings, initializePagination } from './pagination';
 import { cardTemplate } from './cardTemplate';
 import { spinner } from './preloader';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from './auth';
-import { doc } from 'firebase/firestore';
+import { auth } from './auth';
 
 function onHomeLoad() {
   spinner.show();
@@ -33,12 +32,10 @@ onAuthStateChanged(auth, user => {
     console.log('user logged in: ', user);
     refs.authSignOut.parentElement.classList.remove('hidden');
     refs.authOpen.parentElement.classList.add('hidden');
-    // docRef = doc(db, 'users', `${user.uid}`);
   } else {
     console.log('user logged out');
     refs.authSignOut.parentElement.classList.add('hidden');
     refs.authOpen.parentElement.classList.remove('hidden');
-    // docRef = null;
   }
 });
 

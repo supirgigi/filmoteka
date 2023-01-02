@@ -2,13 +2,9 @@ import { refs } from './refs';
 import { movieApi } from './Api';
 import { dataFormat } from './dataFormat';
 import { auth, db } from './auth';
-import {
-  cardLibraryTemplate,
-  selectedQueueTemplate,
-  selectedWatchedTemplate,
-} from './cardTemplate';
-import { getDoc, doc, setDoc } from 'firebase/firestore';
-import { initializePagination, paginationSettings } from './pagination';
+import { selectedQueueTemplate, selectedWatchedTemplate } from './cardTemplate';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { paginationSettings } from './pagination';
 import Notiflix from 'notiflix';
 
 refs.movieList.addEventListener('click', onLibraryClick);
@@ -62,76 +58,38 @@ function onQueueCard() {
   queueRemove.addEventListener('click', removeFromQueueLib);
 }
 
-async function removeFromWatchedLib() {
-  const { userId, userEmail, watchedMovies, queuedMovies } = await getDoc(
+async function removeFromQueueLib() {
+  let { queuedMovies } = await getDoc(
     doc(db, 'users', auth.currentUser.uid)
   ).then(res => {
     return res.data();
   });
-  const filtered = watchedMovies.filter(movie => {
+  queuedMovies = queuedMovies.filter(movie => {
     return movie.id !== currentMovie.id;
   });
-  await setDoc(doc(db, 'users', auth.currentUser.uid), {
-    userId,
-    userEmail,
-    watchedMovies: filtered,
+  await updateDoc(doc(db, 'users', auth.currentUser.uid), {
     queuedMovies,
+  }).then(() => {
+    toggleLibraryModal();
+    Notiflix.Notify.success('Removed successfully');
   });
-  paginationSettings.maxPages = Math.ceil(filtered.length / 20);
-  let paginatedResults = filtered.filter((result, index) => {
-    return index < movieApi.page * 20 && index >= movieApi.page * 20 - 20;
-  });
-
-  console.log(paginatedResults);
-
-  if (paginatedResults.length === 0) {
-    console.log('empty');
-    movieApi.page -= 1;
-    paginatedResults = filtered.filter((result, index) => {
-      return index < movieApi.page * 20 && index >= movieApi.page * 20 - 20;
-    });
-  }
-  const markup = paginatedResults.map(cardLibraryTemplate).join('');
-  refs.movieList.innerHTML = markup;
-  initializePagination();
-  toggleLibraryModal();
-  Notiflix.Notify.success('Removed successfully');
 }
 
-async function removeFromQueueLib() {
-  const { userId, userEmail, watchedMovies, queuedMovies } = await getDoc(
+async function removeFromWatchedLib() {
+  let { watchedMovies } = await getDoc(
     doc(db, 'users', auth.currentUser.uid)
   ).then(res => {
     return res.data();
   });
-  const filtered = queuedMovies.filter(movie => {
+  watchedMovies = watchedMovies.filter(movie => {
     return movie.id !== currentMovie.id;
   });
-  await setDoc(doc(db, 'users', auth.currentUser.uid), {
-    userId,
-    userEmail,
+  await updateDoc(doc(db, 'users', auth.currentUser.uid), {
     watchedMovies,
-    queuedMovies: filtered,
+  }).then(() => {
+    toggleLibraryModal();
+    Notiflix.Notify.success('Removed successfully');
   });
-  paginationSettings.maxPages = Math.ceil(filtered.length / 20);
-  let paginatedResults = filtered.filter((result, index) => {
-    return index < movieApi.page * 20 && index >= movieApi.page * 20 - 20;
-  });
-
-  console.log(paginatedResults);
-
-  if (paginatedResults.length === 0) {
-    console.log('empty');
-    movieApi.page -= 1;
-    paginatedResults = filtered.filter((result, index) => {
-      return index < movieApi.page * 20 && index >= movieApi.page * 20 - 20;
-    });
-  }
-  const markup = paginatedResults.map(cardLibraryTemplate).join('');
-  refs.movieList.innerHTML = markup;
-  initializePagination();
-  toggleLibraryModal();
-  Notiflix.Notify.success('Removed successfully');
 }
 
 function toggleLibraryModal() {
@@ -141,9 +99,9 @@ function toggleLibraryModal() {
   refs.modalCloseBtn.removeEventListener('click', toggleLibraryModal);
   refs.backdrop.removeEventListener('click', onBackdropClick);
   if (watchedRemove) {
-    watchedRemove.removeEventListener('click', removeFromWatched);
+    watchedRemove.removeEventListener('click', removeFromWatchedLib);
   } else {
-    queueRemove.removeEventListener('click', removeFromQueue);
+    queueRemove.removeEventListener('click', removeFromQueueLib);
   }
 }
 

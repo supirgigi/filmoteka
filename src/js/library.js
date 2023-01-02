@@ -1,5 +1,5 @@
 import { refs } from './refs';
-import { getDoc, doc } from 'firebase/firestore';
+import { onSnapshot, doc } from 'firebase/firestore';
 import { paginationSettings } from './pagination';
 import { movieApi } from './Api';
 import { cardLibraryTemplate } from './cardTemplate';
@@ -14,11 +14,10 @@ const queueBtn = document.querySelector('[data-queue]');
 
 onAuthStateChanged(auth, user => {
   if (user) {
-    // docRef = doc(db, 'users', `${user.uid}`);
     console.log('user logged in: ', user);
     refs.authSignOut.parentElement.classList.remove('hidden');
     refs.authOpen.parentElement.classList.add('hidden');
-    onWatchedClick();
+    onWatched();
   } else {
     console.log('user logged out');
     refs.authSignOut.parentElement.classList.add('hidden');
@@ -27,16 +26,14 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-watchedBtn.addEventListener('click', onWatchedClick);
-queueBtn.addEventListener('click', onQueueClick);
+watchedBtn.addEventListener('click', onWatched);
+queueBtn.addEventListener('click', onQueue);
 
-async function onWatchedClick() {
+async function onWatched() {
   if (!auth.currentUser) {
     Notiflix.Notify.failure('Please sign in');
     return;
   }
-
-  spinner.show();
 
   movieApi.resetPage();
 
@@ -44,37 +41,15 @@ async function onWatchedClick() {
   watchedBtn.classList.add('library-btns__btn_current');
   queueBtn.classList.remove('library-btns__btn_current');
 
-  const { watchedMovies } = await getDoc(
-    doc(db, 'users', auth.currentUser.uid)
-  ).then(res => {
-    return res.data();
-  });
-
   paginationSettings.paginationType = 'watched';
-  paginationSettings.maxPages = Math.ceil(
-    watchedMovies.length / paginationSettings.perPage
-  );
-
-  console.log('watched movies: ', watchedMovies);
-  console.log(paginationSettings.maxPages);
-  initializePagination();
-
-  const paginatedResults = watchedMovies.filter((result, index) => {
-    return index < movieApi.page * paginationSettings.perPage;
-  });
-  // console.log('paginated results: ', paginatedResults);
-  const markup = paginatedResults.map(cardLibraryTemplate).join('');
-  refs.movieList.innerHTML = markup;
-  spinner.close();
+  monitorWatchedChanges();
 }
 
-async function onQueueClick() {
+async function onQueue() {
   if (!auth.currentUser) {
     Notiflix.Notify.failure('Please sign in');
     return;
   }
-
-  spinner.show();
 
   movieApi.resetPage();
 
@@ -82,26 +57,86 @@ async function onQueueClick() {
   watchedBtn.classList.remove('library-btns__btn_current');
   queueBtn.classList.add('library-btns__btn_current');
 
-  const { queuedMovies } = await getDoc(
-    doc(db, 'users', auth.currentUser.uid)
-  ).then(res => {
-    return res.data();
-  });
-
   paginationSettings.paginationType = 'queue';
-  paginationSettings.maxPages = Math.ceil(
-    queuedMovies.length / paginationSettings.perPage
-  );
+  monitorQueueChanges();
+}
 
-  console.log('queue movies: ', queuedMovies);
-  console.log(paginationSettings.maxPages);
-  initializePagination();
-  const paginatedResults = queuedMovies.filter((result, index) => {
-    return index < movieApi.page * paginationSettings.perPage;
+function monitorWatchedChanges() {
+  onSnapshot(doc(db, 'users', auth.currentUser.uid), snapshot => {
+    spinner.show();
+    const { watchedMovies } = snapshot.data();
+
+    paginationSettings.maxPages = Math.ceil(
+      watchedMovies.length / paginationSettings.perPage
+    );
+
+    let paginatedResults = watchedMovies.filter((result, index) => {
+      return (
+        index < movieApi.page * paginationSettings.perPage &&
+        index >=
+          movieApi.page * paginationSettings.perPage -
+            paginationSettings.perPage
+      );
+    });
+
+    if (paginatedResults.length === 0) {
+      console.log('empty');
+      movieApi.page -= 1;
+      paginatedResults = watchedMovies.filter((result, index) => {
+        return (
+          index < movieApi.page * paginationSettings.perPage &&
+          index >=
+            movieApi.page * paginationSettings.perPage -
+              paginationSettings.perPage
+        );
+      });
+    }
+
+    console.log(paginatedResults);
+
+    const markup = paginatedResults.map(cardLibraryTemplate).join('');
+    refs.movieList.innerHTML = markup;
+    initializePagination();
+    spinner.close();
   });
-  // console.log('paginated results: ', paginatedResults);
-  const markup = paginatedResults.map(cardLibraryTemplate).join('');
-  refs.movieList.innerHTML = markup;
+}
 
-  spinner.close();
+function monitorQueueChanges() {
+  onSnapshot(doc(db, 'users', auth.currentUser.uid), snapshot => {
+    spinner.show();
+    const { queuedMovies } = snapshot.data();
+
+    paginationSettings.maxPages = Math.ceil(
+      queuedMovies.length / paginationSettings.perPage
+    );
+
+    let paginatedResults = queuedMovies.filter((result, index) => {
+      return (
+        index < movieApi.page * paginationSettings.perPage &&
+        index >=
+          movieApi.page * paginationSettings.perPage -
+            paginationSettings.perPage
+      );
+    });
+
+    if (paginatedResults.length === 0) {
+      console.log('empty');
+      movieApi.page--;
+      paginatedResults = queuedMovies.filter((result, index) => {
+        return (
+          index < movieApi.page * paginationSettings.perPage &&
+          index >=
+            movieApi.page * paginationSettings.perPage -
+              paginationSettings.perPage
+        );
+      });
+    }
+
+    console.log(paginatedResults);
+
+    const markup = paginatedResults.map(cardLibraryTemplate).join('');
+    refs.movieList.innerHTML = markup;
+    initializePagination();
+    spinner.close();
+  });
 }

@@ -1,11 +1,14 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 import { refs } from './refs';
 import {
   getAuth,
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
 } from 'firebase/auth';
 import Notiflix from 'notiflix';
 
@@ -22,10 +25,41 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+auth.useDeviceLanguage();
+const provider = new GoogleAuthProvider();
 
 refs.authLogin.addEventListener('click', loginEmailPassword);
 refs.authRegister.addEventListener('click', createAccount);
 refs.authSignOut.addEventListener('click', logout);
+refs.authGoogle.addEventListener('click', onGoogleAuth);
+
+async function onGoogleAuth() {
+  try {
+    signInWithRedirect(auth, provider);
+  } catch (error) {
+    Notiflix.Notify.failure(error.message);
+  }
+}
+
+async function monitorRedirect() {
+  const result = await getRedirectResult(auth);
+  if (result) {
+    const userData = await getDoc(doc(db, 'users', result.user.uid)).then(
+      res => {
+        return res.data();
+      }
+    );
+    if (!userData) {
+      console.log('new user');
+      setDoc(doc(db, 'users', `${result.user.uid}`), {
+        userId: result.user.uid,
+        userEmail: result.user.email,
+        watchedMovies: [],
+        queuedMovies: [],
+      });
+    }
+  }
+}
 
 async function loginEmailPassword(e) {
   e.preventDefault();
@@ -83,3 +117,5 @@ function logout(e) {
   e.preventDefault();
   signOut(auth).then(location.reload());
 }
+
+monitorRedirect();

@@ -3,7 +3,7 @@ import { movieApi } from './Api';
 import { dataFormat } from './dataFormat';
 import { db, auth } from './auth';
 import { selectedMovieTemplate } from './cardTemplate';
-import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import Notiflix from 'notiflix';
 
 refs.movieList.addEventListener('click', onGalleryClick);
@@ -34,16 +34,10 @@ async function onGalleryClick(e) {
         });
         console.log(userData);
         const { watchedMovies, queuedMovies } = userData;
-        const compareWatched = watchedMovies.find(
-          movie => movie.id === currentMovie.id
-        );
-        const compareQueue = queuedMovies.find(
-          movie => movie.id === currentMovie.id
-        );
-        if (compareWatched) {
+        if (watchedMovies.find(movie => movie.id === currentMovie.id)) {
           toggleWatched();
         }
-        if (compareQueue) {
+        if (queuedMovies.find(movie => movie.id === currentMovie.id)) {
           toggleQueue();
         }
       }
@@ -124,19 +118,16 @@ async function addToWatched() {
     return;
   }
   try {
-    const userData = await getDoc(doc(db, 'users', auth.currentUser.uid)).then(
-      res => {
-        return res.data();
-      }
-    );
-    const { userId, watchedMovies, queuedMovies, userEmail } = userData;
+    const { watchedMovies } = await getDoc(
+      doc(db, 'users', auth.currentUser.uid)
+    ).then(res => {
+      return res.data();
+    });
 
     watchedMovies.push(currentMovie);
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
-      userId,
-      userEmail,
+
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
       watchedMovies,
-      queuedMovies,
     }).then(() => {
       Notiflix.Notify.success('Added to watched');
       toggleWatched();
@@ -148,19 +139,16 @@ async function addToWatched() {
 
 async function removeFromWatched() {
   try {
-    const { userId, userEmail, watchedMovies, queuedMovies } = await getDoc(
+    let { watchedMovies } = await getDoc(
       doc(db, 'users', auth.currentUser.uid)
     ).then(res => {
       return res.data();
     });
-    const filtered = watchedMovies.filter(movie => {
+    watchedMovies = watchedMovies.filter(movie => {
       return movie.id !== currentMovie.id;
     });
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
-      userId,
-      userEmail,
-      watchedMovies: filtered,
-      queuedMovies,
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+      watchedMovies,
     }).then(() => {
       Notiflix.Notify.success('Removed successfully');
       toggleWatched();
@@ -176,18 +164,15 @@ async function addToQueue() {
     return;
   }
   try {
-    const userData = await getDoc(doc(db, 'users', auth.currentUser.uid)).then(
-      res => {
-        return res.data();
-      }
-    );
-    const { userId, watchedMovies, queuedMovies, userEmail } = userData;
+    const { queuedMovies } = await getDoc(
+      doc(db, 'users', auth.currentUser.uid)
+    ).then(res => {
+      return res.data();
+    });
 
     queuedMovies.push(currentMovie);
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
-      userId,
-      userEmail,
-      watchedMovies,
+
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
       queuedMovies,
     }).then(() => {
       Notiflix.Notify.success('Added to queue');
@@ -200,19 +185,16 @@ async function addToQueue() {
 
 async function removeFromQueue() {
   try {
-    const { userId, userEmail, watchedMovies, queuedMovies } = await getDoc(
+    let { queuedMovies } = await getDoc(
       doc(db, 'users', auth.currentUser.uid)
     ).then(res => {
       return res.data();
     });
-    const filtered = queuedMovies.filter(movie => {
+    queuedMovies = queuedMovies.filter(movie => {
       return movie.id !== currentMovie.id;
     });
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
-      userId,
-      userEmail,
-      watchedMovies,
-      queuedMovies: filtered,
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+      queuedMovies,
     }).then(() => {
       Notiflix.Notify.success('Removed successfully');
       toggleQueue();

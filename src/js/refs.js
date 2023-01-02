@@ -13,6 +13,7 @@ export const refs = {
   authSignOut: document.querySelector('[data-auth-sign-out]'),
   authOpen: document.querySelector('[data-auth-open]'),
   authClose: document.querySelector('[data-auth-close]'),
+  authGoogle: document.querySelector('[data-auth-google]'),
   pagination: document.querySelector('.pagination'),
   paginationBtns: document.querySelector('.pag-btns'),
   paginationDotsLeft: document.querySelector('.pagination-btn_dots_left'),
